@@ -43,7 +43,7 @@ def create_new_task():
             prio = i
             break
 
-    t = Task(content, dt, prio)
+    t = Task(content, time.mktime(dt.timetuple()), prio)
     return t
 
 

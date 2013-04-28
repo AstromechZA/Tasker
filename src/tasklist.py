@@ -100,7 +100,7 @@ class TaskList:
             for t in self.activetasks:
                 string = t.content if (len(t.content) < clen) else t.content[0:clen-3] + "..."
                 dd = time.strftime("%H:%M:%S %d/%m/%Y", time.localtime(t.duedate))
-                print fmtstr % {'id':c , "content": string, 'due':dd,'priority':'   '}
+                print fmtstr % {'id':c , "content": string, 'due':dd,'priority':t.priority}
                 c+=1
 
 
