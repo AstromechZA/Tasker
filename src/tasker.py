@@ -3,21 +3,11 @@ import argparse
 import os
 import sys
 import glob
+import time
 from os import path
 
 from tasklist import TaskList
-
-class Tasker:
-
-    # Open a tasker in the given folder
-    def __init__(self, _folder):
-        self.folder = _folder
-        self.current_list = "default"
-
-    # List all of the tasklists in the folder
-    def listLists(self):
-        flist = glob.glob(path.join(self.folder, "*.tsk"))
-        print flist
+from task import Task
 
 
 
@@ -32,18 +22,36 @@ if __name__ == '__main__':
         print 'Creating Tasker folder at: ' + taskerfolder
         os.makedirs(taskerfolder)
 
-    # Parser argument
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="The tasklist command you wish to run.")
-    parser.add_argument("-l","--list",help="The name of the tasklist you want to work on.")
-    parser.usage = "%(prog)s command [options]"
+    # No arguments, default to list by adding it
+    if len(sys.argv) == 1:
+        sys.argv.append('list')
 
-    args = parser.parse_args()
+    # Get command from args
+    cmd = sys.argv[1].lower()
 
-    tasker = Tasker(taskerfolder)
-    tasker.listLists()
+    if cmd == 'list':
+        # List tasks
+        t = TaskList('default', taskerfolder)
+        t.print_list()
 
-    #tl = TaskList("default", taskerfolder)
-    #tl.addTask("Do something", 12312049, 0)
+    elif cmd == 'add':
+        t = TaskList('default', taskerfolder)
+        tsk = Task('Do something', time.time(), 2)
+        t.add(tsk)
+        t.save()
 
-    print args
+    elif cmd =='-h' or cmd == '--help':
+        # Show usage
+        print "Try one of the following:"
+        print "  list \t:   List your tasks."
+        print "  add  \t:   Add a new task to the list"
+    else:
+        # Unrecognised command
+        print "Unrecognised command: '%s'" % cmd
+        print "Try one of the following:"
+        print "  list \t:   List your tasks."
+        print "  add  \t:   Add a new task to the list"
+
+
+
+    print 1

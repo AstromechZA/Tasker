@@ -4,6 +4,8 @@ import task
 import json
 import time
 
+import terminalsize
+
 class TaskList:
 
     def __init__(self, name, folder):
@@ -24,12 +26,14 @@ class TaskList:
             with open(self.path,'r') as f:
                 l = f.readline()
                 j = json.loads(l)
-                ts = j['active']
-                for t in ts:
-                    self.activetasks.append(task.fromJSON(t))
-                ts = j['completed']
-                for t in ts:
-                    self.completedtasks.append(task.fromJSON(t))
+                if 'active' in j:
+                    ts = j['active']
+                    for t in ts:
+                        self.activetasks.append(task.fromJSON(t))
+                if 'completed' in j:
+                    ts = j['completed']
+                    for t in ts:
+                        self.completedtasks.append(task.fromJSON(t))
 
                 self.sort()
 
@@ -77,8 +81,28 @@ class TaskList:
         self.completedtasks = sorted(self.completedtasks, cmp=completed_comparator)
 
 
+    def print_list(self):
 
-    
+        sizex, sizey = terminalsize.get_terminal_size()
+
+        # Print active tasks
+        tlen = 9+10+20+3
+        clen = sizex-tlen
+        fmtstr = "%(id)3s | %(content)-" + str(clen) + "s | %(due)-20s | %(priority)-10s"
+        print fmtstr % {'id':'#','content':'Task','due':'Due','priority':'Priority'}
+
+        print "-" * (sizex)
+
+        if len(self.activetasks) == 0:
+            print "There are no active tasks. Use the 'Add' command to to one."
+        else:
+            c = 0
+            for t in self.activetasks:
+                string = t.content if (len(t.content) < clen) else t.content[0:clen-3] + "..."
+                dd = time.strftime("%H:%M:%S %d/%m/%Y", time.localtime(t.duedate))
+                print fmtstr % {'id':c , "content": string, 'due':dd,'priority':'   '}
+                c+=1
+
 
 
 
