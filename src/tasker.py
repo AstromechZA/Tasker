@@ -1,6 +1,7 @@
 # Tasker.py
 import argparse
 import os
+import sys
 import glob
 from os import path
 
@@ -33,7 +34,9 @@ if __name__ == '__main__':
 
     # Parser argument
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f","--file", help="The Tasklist file you want to open (*.tsk).")
+    parser.add_argument("command", help="The tasklist command you wish to run.")
+    parser.add_argument("-l","--list",help="The name of the tasklist you want to work on.")
+    parser.usage = "%(prog)s command [options]"
 
     args = parser.parse_args()
 
