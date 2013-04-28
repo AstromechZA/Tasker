@@ -4,6 +4,8 @@ import os
 import glob
 from os import path
 
+from TaskList import TaskList
+
 class Tasker:
 
     # Open a tasker in the given folder
@@ -15,6 +17,8 @@ class Tasker:
     def listLists(self):
         flist = glob.glob(path.join(self.folder, "*.tsk"))
         print flist
+
+
 
 
 if __name__ == '__main__':
@@ -36,6 +40,7 @@ if __name__ == '__main__':
     tasker = Tasker(taskerfolder)
     tasker.listLists()
 
-
+    tl = TaskList("default", taskerfolder)
+    tl.addTask("Do something", 12312049, 0)
 
     print args
