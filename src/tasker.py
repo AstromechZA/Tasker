@@ -4,12 +4,37 @@ import os
 import sys
 import glob
 import time
+from datetime import datetime
 from os import path
 
 from tasklist import TaskList
 from task import Task
+import parsedatetime as pdt
 
 
+def create_new_task():
+    print "What is the task:"
+    content = raw_input()
+    
+    cal = pdt.Calendar(pdt.Constants('en_AU', usePyICU=False))
+    dd = None
+    while True:
+        print "When is it due (ENTER to no due date)"
+        dd = cal.parse(raw_input())
+
+        dt = datetime.fromtimestamp(time.mktime(dd[0]))
+
+        print dt.strftime("%H:%M:%S %d/%m/%Y")
+
+        #break
+
+    prio = 2
+    while True:
+        print "What is its priority? (0 = Lowest, 1 = Low, 2 = Normal, 3 = High, 4 = Highest)"
+        i = input()
+        if i>0 and i<5:
+            prio = i
+            break
 
 
 if __name__ == '__main__':
@@ -36,8 +61,9 @@ if __name__ == '__main__':
 
     elif cmd == 'add':
         t = TaskList('default', taskerfolder)
-        tsk = Task('Do something', time.time(), 2)
-        t.add(tsk)
+        create_new_task()
+        #tsk = Task('Do something', time.time(), 2)
+        #t.add(tsk)
         t.save()
 
     elif cmd =='-h' or cmd == '--help':

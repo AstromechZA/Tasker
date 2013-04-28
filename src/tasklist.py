@@ -70,7 +70,7 @@ class TaskList:
         def active_comparator(t1, t2):
             if t1.duedate == t2.duedate: 
                 return t2.priority - t1.priority
-            return t1.duedate - t2.duedate
+            return int(t1.duedate - t2.duedate)
 
         self.activetasks = sorted(self.activetasks, cmp=active_comparator)
 
@@ -84,7 +84,7 @@ class TaskList:
     def print_list(self):
 
         sizex, sizey = terminalsize.get_terminal_size()
-
+        sizex-=5
         # Print active tasks
         tlen = 9+10+20+3
         clen = sizex-tlen
