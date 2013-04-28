@@ -11,30 +11,40 @@ from tasklist import TaskList
 from task import Task
 import parsedatetime as pdt
 
+def yesno(query):
+    while True:
+        print query + " (yes/no)"
+        ans = raw_input()
+        if ans.lower() == 'yes': return True
+        if ans.lower() == 'no': return False
+
+
 
 def create_new_task():
     print "What is the task:"
     content = raw_input()
     
     cal = pdt.Calendar(pdt.Constants('en_AU', usePyICU=False))
-    dd = None
+    dt = None
     while True:
         print "When is it due (ENTER to no due date)"
         dd = cal.parse(raw_input())
 
         dt = datetime.fromtimestamp(time.mktime(dd[0]))
 
-        print dt.strftime("%H:%M:%S %d/%m/%Y")
-
-        #break
+        if yesno("Did you mean '%s'?" % dt.strftime("%H:%M:%S %d/%m/%Y")):
+            break
 
     prio = 2
     while True:
         print "What is its priority? (0 = Lowest, 1 = Low, 2 = Normal, 3 = High, 4 = Highest)"
         i = input()
-        if i>0 and i<5:
+        if i>=0 and i<=4:
             prio = i
             break
+
+    t = Task(content, dt, prio)
+    return t
 
 
 if __name__ == '__main__':
@@ -61,10 +71,10 @@ if __name__ == '__main__':
 
     elif cmd == 'add':
         t = TaskList('default', taskerfolder)
-        create_new_task()
-        #tsk = Task('Do something', time.time(), 2)
-        #t.add(tsk)
+        t.add(create_new_task())
         t.save()
+
+        t.print_list()
 
     elif cmd =='-h' or cmd == '--help':
         # Show usage
