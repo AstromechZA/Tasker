@@ -5,6 +5,8 @@ import json
 import time
 
 import terminalsize
+import colorama
+from colorama import Fore, Back, Style
 
 class TaskList:
 
@@ -82,16 +84,14 @@ class TaskList:
 
 
     def print_list(self):
-
+        colorama.init()
         sizex, sizey = terminalsize.get_terminal_size()
         sizex-=5
         # Print active tasks
         tlen = 9+10+20+3
         clen = sizex-tlen
-        fmtstr = "%(id)3s | %(content)-" + str(clen) + "s | %(due)-20s | %(priority)-10s"
-        print fmtstr % {'id':'#','content':'Task','due':'Due','priority':'Priority'}
-
-        print "-" * (sizex)
+        fmtstr = "%(id)3s | %(content)-" + str(clen) + "s | %(due)-20s | %(priority)-10s" + Fore.RESET + Back.RESET
+        print Back.WHITE + Fore.BLACK + fmtstr % {'id':'#','content':'Task','due':'Due','priority':'Priority'}
 
         if len(self.activetasks) == 0:
             print "There are no active tasks. Use the 'Add' command to to one."
@@ -100,9 +100,8 @@ class TaskList:
             for t in self.activetasks:
                 string = t.content if (len(t.content) < clen) else t.content[0:clen-3] + "..."
                 dd = time.strftime("%H:%M:%S %d/%m/%Y", time.localtime(t.duedate))
-                print fmtstr % {'id':c , "content": string, 'due':dd,'priority':t.priority}
+                print Back.GREEN + fmtstr % {'id':c , "content": string, 'due':dd,'priority':t.priority}
                 c+=1
-
 
 
 
