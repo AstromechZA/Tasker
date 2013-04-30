@@ -27,10 +27,11 @@ def create_new_task():
     cal = pdt.Calendar(pdt.Constants('en_AU', usePyICU=False))
     dt = None
     while True:
-        print "When is it due (ENTER to no due date)"
+        print "What day is it due?"
         dd = cal.parse(raw_input())
-
         dt = datetime.fromtimestamp(time.mktime(dd[0]))
+        dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
 
         if yesno("Did you mean '%s'?" % dt.strftime("%H:%M:%S %d/%m/%Y")):
             break
@@ -87,7 +88,3 @@ if __name__ == '__main__':
         print "Try one of the following:"
         print "  list \t:   List your tasks."
         print "  add  \t:   Add a new task to the list"
-
-
-
-    print 1

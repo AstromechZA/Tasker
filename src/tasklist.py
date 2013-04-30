@@ -10,6 +10,8 @@ from colorama import Fore, Back, Style
 
 class TaskList:
 
+    priorityStyles = [ Back.BLACK + Fore.WHITE, Back.BLACK + Fore.GREEN, Back.GREEN + Fore.WHITE, Back.YELLOW + Fore.WHITE, Back.RED + Fore.WHITE ]
+
     def __init__(self, name, folder):
 
         # Name must not include the .tsk extension
@@ -90,7 +92,7 @@ class TaskList:
         # Print active tasks
         tlen = 9+10+20+3
         clen = sizex-tlen
-        fmtstr = "%(id)3s | %(content)-" + str(clen) + "s | %(due)-20s | %(priority)-10s" + Fore.RESET + Back.RESET
+        fmtstr = "%(id)3s | %(content)-" + str(clen) + "s | %(due)-20s | %(priority)-10s" + Fore.RESET + Back.RESET + Style.RESET_ALL
         print Back.WHITE + Fore.BLACK + fmtstr % {'id':'#','content':'Task','due':'Due','priority':'Priority'}
 
         if len(self.activetasks) == 0:
@@ -98,11 +100,29 @@ class TaskList:
         else:
             c = 0
             for t in self.activetasks:
-                string = t.content if (len(t.content) < clen) else t.content[0:clen-3] + "..."
-                dd = time.strftime("%H:%M:%S %d/%m/%Y", time.localtime(t.duedate))
-                print Back.GREEN + fmtstr % {'id':c , "content": string, 'due':dd,'priority':t.priority}
+                numlines = int(len(t.content) / (clen))+1
+                col1 = c
+                col2 = ""
+                col3 = time.strftime("%H:%M:%S %d/%m/%Y", time.localtime(t.duedate))
+                col4 = t.priority
+                start = 0
+                for i in range(numlines):
+
+                    end = start+clen
+                    if end < len(t.content):
+                        while end>0:
+                            if t.content[end].isspace():
+                                break
+                            end-=1
+                        if end==0:
+                            end = start+clen
+                    col2 = (t.content[start:end]).strip()
+                    start = end
+                    print self.priorityStyles[t.priority] + fmtstr % {'id':col1 , "content": col2, 'due':col3,'priority':col4}
+                    col1 = col3 = col4 = ""
                 c+=1
 
+        print ""
 
 
     def toJSON(self):
